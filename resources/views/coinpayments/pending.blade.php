@@ -1,4 +1,4 @@
-@extends('layouts.core.frontend')
+@extends('user.layouts.main')
 
 @section('title', trans('messages.subscriptions'))
 
@@ -11,7 +11,7 @@
 
     <div class="page-title">
         <ul class="breadcrumb breadcrumb-caret position-right">
-            <li><a href="{{ \Acelle\Cashier\Cashier::lr_action("HomeController@index") }}">{{ trans('messages.home') }}</a></li>
+            <li><a href="{{ route('/') }}">{{ trans('messages.home') }}</a></li>
             <li class="active">{{ trans('messages.subscription') }}</li>
         </ul>
     </div>
@@ -19,8 +19,6 @@
 @endsection
 
 @section('content')
-
-    @include("account._menu", ['tab' => 'subscription'])
 
     <div class="row">
         <div class="col-md-8">
@@ -103,7 +101,7 @@ display: block;" href="{{ $service->getData($invoice)['status_url'] }}">
             <div class="my-4">
                 <hr>
                 <a class="" link-method="POST" link-confirm="{{ trans('messages.invoice.cancel.confirm') }}"
-                    href="{{ action('SubscriptionController@cancelInvoice', [
+                    href="{{ action('App\Http\Controllers\User\SubscriptionController@cancelInvoice', [
                         'invoice_uid' => $invoice->uid,
                     ]) }}">
                     {{ trans('messages.subscription.cancel_now_change_other_plan') }}
@@ -112,7 +110,7 @@ display: block;" href="{{ $service->getData($invoice)['status_url'] }}">
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-4">
-            @include('invoices.bill', [
+            @include('user.invoices.bill', [
                 'bill' => $invoice->getBillingInfo(),
             ])
         </div>

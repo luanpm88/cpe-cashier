@@ -7,9 +7,9 @@ use Acelle\Library\Contracts\PaymentGatewayInterface;
 use Carbon\Carbon;
 use Acelle\Cashier\Cashier;
 use Acelle\Library\AutoBillingData;
-use Acelle\Model\Invoice;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 
 class PaystackPaymentGateway implements PaymentGatewayInterface
 {
@@ -136,7 +136,7 @@ class PaystackPaymentGateway implements PaymentGatewayInterface
         $gateway = $this;
 
         $invoice->checkout($gateway, function($invoice) use ($gateway) {
-            $card = $gateway->getCard($invoice->customer);
+            $card = $gateway->getCard($invoice->account);
 
             try {
                 // charge invoice
@@ -221,7 +221,7 @@ class PaystackPaymentGateway implements PaymentGatewayInterface
         $autoBillingData = new AutoBillingData($this, [
             'last_transaction' => $result,
         ]);
-        $invoice->customer->setAutoBillingData($autoBillingData);
+        $invoice->account->setAutoBillingData($autoBillingData);
 
         return $result;
     }

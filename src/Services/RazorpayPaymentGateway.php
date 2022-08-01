@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Log;
 use Acelle\Library\Contracts\PaymentGatewayInterface;
 use Carbon\Carbon;
 use Acelle\Cashier\Cashier;
-use Acelle\Model\Invoice;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 
 class RazorpayPaymentGateway implements PaymentGatewayInterface
 {
@@ -224,12 +224,12 @@ class RazorpayPaymentGateway implements PaymentGatewayInterface
             $customer = $this->request('customers', 'POST', [
                 "Content-Type" => "application/json"
             ], [
-                "name" => $invoice->customer->user->displayName(),
-                "email" => $invoice->customer->user->email,
+                "name" => $invoice->account->user->displayName(),
+                "email" => $invoice->account->user->email,
                 "contact" => "",
                 "fail_existing" => "0",
                 "notes" => [
-                    "uid" => $invoice->customer->uid
+                    "uid" => $invoice->account->uid
                 ]
             ]);
         }

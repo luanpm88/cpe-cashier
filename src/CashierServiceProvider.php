@@ -11,7 +11,7 @@ use Acelle\Cashier\Services\CoinpaymentsPaymentGateway;
 use Acelle\Cashier\Services\PaystackPaymentGateway;
 use Acelle\Cashier\Services\PaypalPaymentGateway;
 use Acelle\Cashier\Services\RazorpayPaymentGateway;
-use Acelle\Model\Setting;
+use App\Models\Setting;
 use Acelle\Library\Facades\Hook;
 
 class CashierServiceProvider extends ServiceProvider

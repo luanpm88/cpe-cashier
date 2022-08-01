@@ -28,7 +28,7 @@
                                     {{ trans('messages.card.holder') }}
                                 </div>
                                 <div class="lastUnit size1of2">
-                                    <mc:flag>{{ $service->getCardInformation(request()->user()->customer)->name }}</mc:flag>
+                                    <mc:flag>{{ $service->getCardInformation(request()->user()->account)->name }}</mc:flag>
                                 </div>
                             </li>
                             <li>
@@ -36,7 +36,7 @@
                                     {{ trans('messages.card.last4') }}
                                 </div>
                                 <div class="lastUnit size1of2">
-                                    <mc:flag>{{ $service->getCardInformation(request()->user()->customer)->last4 }}</mc:flag>
+                                    <mc:flag>{{ $service->getCardInformation(request()->user()->account)->last4 }}</mc:flag>
                                 </div>
                             </li>
                         </ul>
@@ -88,7 +88,7 @@
                 </form>
 
                 <a
-                    href="{{ \Acelle\Cashier\Cashier::lr_action('SubscriptionController@index') }}"
+                    href="{{ \Acelle\Cashier\Cashier::lr_action('App\Http\Controllers\User\SubscriptionController@index') }}"
                     class="text-muted mt-4" style="text-decoration: underline; display: block"
                 >{{ trans('cashier::messages.stripe.return_back') }}</a>
                 

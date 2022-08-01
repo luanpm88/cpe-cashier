@@ -79,7 +79,7 @@
 
                 <div class="my-4">
                     <hr>
-                    <form id="cancelForm" method="POST" action="{{ action('SubscriptionController@cancelInvoice', [
+                    <form id="cancelForm" method="POST" action="{{ action('App\Http\Controllers\User\SubscriptionController@cancelInvoice', [
                                 'invoice_uid' => $invoice->uid,
                     ]) }}">
                         {{ csrf_field() }}

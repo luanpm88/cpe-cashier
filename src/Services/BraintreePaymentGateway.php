@@ -5,9 +5,9 @@ namespace Acelle\Cashier\Services;
 use Acelle\Library\Contracts\PaymentGatewayInterface;
 use Acelle\Cashier\Cashier;
 use Carbon\Carbon;
-use Acelle\Model\Invoice;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 
 class BraintreePaymentGateway implements PaymentGatewayInterface
 {
@@ -98,7 +98,7 @@ class BraintreePaymentGateway implements PaymentGatewayInterface
         $gateway = $this;
 
         $invoice->checkout($this, function($invoice) use ($gateway) {
-            $autoBillingData = $invoice->customer->getAutoBillingData();
+            $autoBillingData = $invoice->account->getAutoBillingData();
 
             try {
                 // charge invoice

@@ -1,4 +1,4 @@
-@extends('layouts.core.frontend')
+@extends('user.layouts.main')
 
 @section('title', trans('messages.subscriptions'))
 
@@ -6,7 +6,7 @@
 
     <div class="page-title">
         <ul class="breadcrumb breadcrumb-caret position-right">
-            <li class="breadcrumb-item"><a href="{{ \Acelle\Cashier\Cashier::lr_action("HomeController@index") }}">{{ trans('messages.home') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('/') }}">{{ trans('messages.home') }}</a></li>
             <li class="breadcrumb-item active">{{ trans('messages.subscription') }}</li>
         </ul>
     </div>
@@ -14,8 +14,6 @@
 @endsection
 
 @section('content')
-
-    @include("account._menu", ['tab' => 'subscription'])
 
     <div class="row">
         <div class="col-md-6">
@@ -38,11 +36,11 @@
                     >{{ trans('cashier::messages.offline.claim_payment') }}</button>
                 </form>
 
-                <form id="cancelForm" method="POST" action="{{ action('SubscriptionController@cancelInvoice', [
+                <form id="cancelForm" method="POST" action="{{ action('App\Http\Controllers\User\SubscriptionController@cancelInvoice', [
                             'invoice_uid' => $invoice->uid,
                 ]) }}">
                     {{ csrf_field() }}
-                    <a href="{{ action('SubscriptionController@index') }}">
+                    <a href="{{ action('App\Http\Controllers\User\SubscriptionController@index') }}">
                         {{ trans('cashier::messages.go_back') }}
                     </a>
                 </form>
@@ -51,7 +49,7 @@
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-4">
-            @include('invoices.bill', [
+            @include('user.invoices.bill', [
                 'bill' => $invoice->getBillingInfo(),
             ])
         </div>

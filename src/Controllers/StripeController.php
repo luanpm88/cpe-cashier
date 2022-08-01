@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Log as LaravelLog;
 use Acelle\Cashier\Cashier;
 use Acelle\Cashier\Services\StripePaymentGateway;
 use Acelle\Library\Facades\Billing;
-use Acelle\Model\Setting;
-use Acelle\Model\Invoice;
+use App\Models\Setting;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 use Acelle\Library\AutoBillingData;
 
 
@@ -56,7 +56,7 @@ class StripeController extends Controller
             }
 
             $request->session()->flash('alert-success', trans('cashier::messages.gateway.updated'));
-            return redirect()->action('Admin\PaymentController@index');
+            return redirect()->action('App\Http\Controllers\Admin\PaymentController@index');
         }
 
         return view('cashier::stripe.settings', [
@@ -90,7 +90,7 @@ class StripeController extends Controller
      **/
     public function checkout(Request $request, $invoice_uid)
     {
-        $customer = $request->user()->customer;
+        $customer = $request->user()->account;
         $service = $this->getPaymentService();
         $invoice = Invoice::findByUid($invoice_uid);
 
@@ -105,7 +105,7 @@ class StripeController extends Controller
                 return new TransactionVerificationResult(TransactionVerificationResult::RESULT_DONE);
             });
 
-            return redirect()->action('SubscriptionController@index');
+            return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
         }
 
         if ($request->isMethod('post')) {
@@ -118,7 +118,7 @@ class StripeController extends Controller
                     $invoice->checkout($service, function($invoice) {
                         return new TransactionVerificationResult(TransactionVerificationResult::RESULT_FAILED, $e->getMessage());
                     });
-                    return redirect()->action('SubscriptionController@index');
+                    return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
                 }
 
                 try {
@@ -130,7 +130,7 @@ class StripeController extends Controller
                         return new TransactionVerificationResult(TransactionVerificationResult::RESULT_DONE);
                     });
 
-                    return redirect()->action('SubscriptionController@index');
+                    return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
                 } catch (\Stripe\Exception\CardException $e) {
                     $payment_intent_id = $e->getError()->payment_intent->id;
                     
@@ -143,7 +143,7 @@ class StripeController extends Controller
                     $invoice->checkout($service, function($invoice) use ($e) {
                         return new TransactionVerificationResult(TransactionVerificationResult::RESULT_FAILED, $e->getMessage());
                     });
-                    return redirect()->action('SubscriptionController@index');
+                    return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
                 }
 
             // Use new card
@@ -187,6 +187,6 @@ class StripeController extends Controller
 
     public function autoBillingDataUpdate(Request $request)
     {
-        return redirect()->action('SubscriptionController@index');
+        return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
     }
 }

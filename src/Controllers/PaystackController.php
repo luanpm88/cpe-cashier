@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Log as LaravelLog;
 use Acelle\Cashier\Cashier;
 use Acelle\Cashier\Services\PaystackPaymentGateway;
 use Acelle\Library\Facades\Billing;
-use Acelle\Model\Setting;
+use App\Models\Setting;
 use Acelle\Library\AutoBillingData;
-use Acelle\Model\Invoice;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 
 class PaystackController extends Controller
 {
@@ -55,7 +55,7 @@ class PaystackController extends Controller
             }
 
             $request->session()->flash('alert-success', trans('cashier::messages.gateway.updated'));
-            return redirect()->action('Admin\PaymentController@index');
+            return redirect()->action('App\Http\Controllers\Admin\PaymentController@index');
         }
 
         return view('cashier::paystack.settings', [
@@ -101,10 +101,10 @@ class PaystackController extends Controller
                 return new TransactionVerificationResult(TransactionVerificationResult::RESULT_DONE);
             });
 
-            return redirect()->action('SubscriptionController@index');
+            return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
         }
 
-        if ($service->getCard($invoice->customer)) {
+        if ($service->getCard($invoice->account)) {
             return view('cashier::paystack.charging', [
                 'service' => $service,
                 'invoice' => $invoice,
@@ -120,11 +120,11 @@ class PaystackController extends Controller
                     return new TransactionVerificationResult(TransactionVerificationResult::RESULT_DONE);
                 });
 
-                return redirect()->action('SubscriptionController@index');
+                return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
             } catch (\Exception $e) {
                 // return with error message
                 $request->session()->flash('alert-error', $e->getMessage());
-                return redirect()->action('SubscriptionController@index');
+                return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
             }
         }
 
@@ -154,7 +154,7 @@ class PaystackController extends Controller
         // autopay
         $service->autoCharge($invoice);
 
-        return redirect()->action('SubscriptionController@index');
+        return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
     }
 
     /**
@@ -166,6 +166,6 @@ class PaystackController extends Controller
      **/
     public function autoBillingDataUpdate(Request $request)
     {
-        return redirect()->action('SubscriptionController@index');
+        return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
     }
 }

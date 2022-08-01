@@ -6,11 +6,11 @@ use Acelle\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log as LaravelLog;
 use Acelle\Cashier\Cashier;
-use Acelle\Model\Setting;
+use App\Models\Setting;
 use Acelle\Library\Facades\Billing;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Invoice;
-use Acelle\Model\Transaction;
+use App\Models\Invoice;
+use App\Models\Transaction;
 
 class OfflineController extends Controller
 {
@@ -32,7 +32,7 @@ class OfflineController extends Controller
                 Billing::enablePaymentGateway($gateway->getType());
             }
 
-            return redirect()->action('Admin\PaymentController@index');
+            return redirect()->action('App\Http\Controllers\Admin\PaymentController@index');
         }
 
         return view('cashier::offline.settings', [
@@ -78,7 +78,7 @@ class OfflineController extends Controller
                 return new TransactionVerificationResult(TransactionVerificationResult::RESULT_DONE);
             });
 
-            return redirect()->action('SubscriptionController@index');
+            return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
         }
         
         return view('cashier::offline.checkout', [
@@ -109,6 +109,6 @@ class OfflineController extends Controller
             return new TransactionVerificationResult(TransactionVerificationResult::RESULT_STILL_PENDING);
         });
         
-        return redirect()->action('SubscriptionController@index');
+        return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
     }
 }

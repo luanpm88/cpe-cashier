@@ -47,7 +47,7 @@
                     function payWithPaystack() {
                         var handler = PaystackPop.setup({
                             key: '{{ $service->publicKey }}', // Replace with your public key
-                            email: '{{ $invoice->customer->user->email }}',
+                            email: '{{ $invoice->account->user->email }}',
                             amount: {{ $invoice->total() }} * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
                             currency: '{{ $invoice->currency->code }}', // Use GHS for Ghana Cedis or USD for US Dollars
                             firstname: '{{ $invoice->billing_first_name }}',
@@ -70,7 +70,7 @@
 
                 <div class="my-4">
                     <hr>
-                    <form id="cancelForm" method="POST" action="{{ action('SubscriptionController@cancelInvoice', [
+                    <form id="cancelForm" method="POST" action="{{ action('App\Http\Controllers\User\SubscriptionController@cancelInvoice', [
                                 'invoice_uid' => $invoice->uid,
                     ]) }}">
                         {{ csrf_field() }}

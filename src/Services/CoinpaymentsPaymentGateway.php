@@ -5,9 +5,9 @@ use Acelle\Library\Contracts\PaymentGatewayInterface;
 use Carbon\Carbon;
 use Acelle\Cashier\Cashier;
 use Acelle\Cashier\Library\CoinPayment\CoinpaymentsAPI;
-use Acelle\Model\Invoice;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 
 class CoinpaymentsPaymentGateway implements PaymentGatewayInterface
 {
@@ -159,11 +159,11 @@ class CoinpaymentsPaymentGateway implements PaymentGatewayInterface
         $gateway = $this;
 
         $invoice->checkout($gateway, function($invoice) use ($gateway) {
-            $autoBillingData = $invoice->customer->getAutoBillingData();
+            $autoBillingData = $invoice->account->getAutoBillingData();
 
             try {
                 // charge invoice
-                $result = $gateway->doCharge($invoice->customer, [
+                $result = $gateway->doCharge($invoice->account, [
                     'id' => $invoice->uid,
                     'amount' => $invoice->total(),
                     'currency' => $invoice->currency->code,

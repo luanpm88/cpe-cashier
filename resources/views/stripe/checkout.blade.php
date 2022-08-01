@@ -6,10 +6,6 @@
         <link rel="stylesheet" href="{{ \Acelle\Cashier\Cashier::public_url('/vendor/acelle-cashier/css/main.css') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        @include('layouts.core._includes')
-
-        @include('layouts.core._script_vars')
-
         <script src="https://js.stripe.com/v3/"></script>
     </head>
     
@@ -77,7 +73,7 @@
                 </div>
 
                 <a
-                    href="{{ \Acelle\Cashier\Cashier::lr_action('SubscriptionController@index') }}"
+                    href="{{ \Acelle\Cashier\Cashier::lr_action('App\Http\Controllers\User\SubscriptionController@index') }}"
                     class="text-muted mt-4" style="text-decoration: underline; display: block"
                 >{{ trans('cashier::messages.stripe.return_back') }}</a>
                 
@@ -113,7 +109,6 @@
             });
 
             $('#submit').on('click', function() {
-                addButtonMask($(this));
                 stripe.confirmCardPayment('{{ $clientSecret }}', {
                     payment_method: {
                         card: card,
@@ -138,7 +133,6 @@
                         new Dialog('alert', {
                             message: result.error.message
                         });
-                        removeButtonMask($('#submit'));
                     } else {
                         if (result.paymentIntent.status === 'succeeded') {
                             // Show a success message to your customer
@@ -148,8 +142,6 @@
 
                             // The PaymentMethod ID can be found on result.paymentIntent.payment_method
                             // console.log(result.paymentIntent);
-
-                            addMaskLoading(`{!! trans('cashier::messages.stripe.checkout.processing_payment.intro') !!}`);
 
                             // copy
                             $.ajax({
@@ -162,7 +154,7 @@
                                     payment_method_id: result.paymentIntent.payment_method,
                                 }
                             }).done(function(response) {
-                                window.location = '{{ action('SubscriptionController@index') }}';
+                                window.location = '{{ action('App\Http\Controllers\User\SubscriptionController@index') }}';
                             });
             
                         }

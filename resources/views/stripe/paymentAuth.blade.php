@@ -6,9 +6,6 @@
         <link rel="stylesheet" href="{{ \Acelle\Cashier\Cashier::public_url('/vendor/acelle-cashier/css/main.css') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        @include('layouts.core._includes')
-
-        @include('layouts.core._script_vars')
 
         <script src="https://js.stripe.com/v3/"></script>
     </head>
@@ -32,7 +29,7 @@
                     new Dialog('alert', {
                         message: result.error.message,
                         ok: function() {
-                            window.location = '{{ action('SubscriptionController@index') }}';
+                            window.location = '{{ action('App\Http\Controllers\User\SubscriptionController@index') }}';
                         }
                     });
                 } else {
@@ -48,7 +45,7 @@
                                 payment_method_id: result.paymentIntent.payment_method,
                             }
                         }).done(function(response) {
-                            window.location = '{{ action('SubscriptionController@index') }}';
+                            window.location = '{{ action('App\Http\Controllers\User\SubscriptionController@index') }}';
                         });
                     }
                 }

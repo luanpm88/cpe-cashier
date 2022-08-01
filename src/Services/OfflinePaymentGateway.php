@@ -9,9 +9,9 @@ use Stripe\Subscription as StripeSubscription;
 use Acelle\Cashier\Cashier;
 use Acelle\Library\Contracts\PaymentGatewayInterface;
 use Carbon\Carbon;
-use Acelle\Model\Invoice;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 
 class OfflinePaymentGateway implements PaymentGatewayInterface
 {

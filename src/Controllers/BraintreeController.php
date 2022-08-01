@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Log as LaravelLog;
 use Acelle\Cashier\Cashier;
 use Acelle\Cashier\Services\BraintreePaymentGateway;
 use Acelle\Library\Facades\Billing;
-use Acelle\Model\Setting;
+use App\Models\Setting;
 use Acelle\Library\AutoBillingData;
-use Acelle\Model\Invoice;
+use App\Models\Invoice;
 use Acelle\Library\TransactionVerificationResult;
-use Acelle\Model\Transaction;
+use App\Models\Transaction;
 
 class BraintreeController extends Controller
 {
@@ -59,7 +59,7 @@ class BraintreeController extends Controller
             }
 
             $request->session()->flash('alert-success', trans('cashier::messages.gateway.updated'));
-            return redirect()->action('Admin\PaymentController@index');
+            return redirect()->action('App\Http\Controllers\Admin\PaymentController@index');
         }
 
         return view('cashier::braintree.settings', [
@@ -86,7 +86,7 @@ class BraintreeController extends Controller
     **/
     public function checkout(Request $request, $invoice_uid)
     {
-        $customer = $request->user()->customer;
+        $customer = $request->user()->account;
         $service = $this->getPaymentService();
         $invoice = Invoice::findByUid($invoice_uid);
         
@@ -106,7 +106,7 @@ class BraintreeController extends Controller
                 return new TransactionVerificationResult(TransactionVerificationResult::RESULT_DONE);
             });
 
-            return redirect()->action('SubscriptionController@index');
+            return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
         }
 
         // Customer has no card
@@ -123,7 +123,7 @@ class BraintreeController extends Controller
             $result = $service->autoCharge($invoice);
 
             // return back
-            return redirect()->action('SubscriptionController@index');
+            return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
         }
 
         return view('cashier::braintree.charging', [
@@ -149,16 +149,16 @@ class BraintreeController extends Controller
         }
 
         // get card
-        $card = $service->getCardInformation($request->user()->customer);
+        $card = $service->getCardInformation($request->user()->account);
         
         if ($request->isMethod('post')) {
             if (!$request->use_current_card) {
                 // update card
-                $service->updateCard($request->user()->customer, $request->nonce);
+                $service->updateCard($request->user()->account, $request->nonce);
             }
 
             // get card
-            $card = $service->getCardInformation($request->user()->customer);
+            $card = $service->getCardInformation($request->user()->account);
 
             // update auto billing data
             $autoBillingData = new AutoBillingData($service, [
@@ -166,14 +166,14 @@ class BraintreeController extends Controller
                 'card_last4' => $card->last4,
                 'card_type' => $card->cardType,
             ]);
-            $request->user()->customer->setAutoBillingData($autoBillingData);
+            $request->user()->account->setAutoBillingData($autoBillingData);
             
             // return to billing page
             $request->session()->flash('alert-success', trans('cashier::messages.braintree.connected'));
             if ($request->return_url) {
                 return redirect()->away($request->return_url);
             } else {
-                return redirect()->action('SubscriptionController@index');
+                return redirect()->action('App\Http\Controllers\User\SubscriptionController@index');
             }
         }
         
